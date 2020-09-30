@@ -1,6 +1,9 @@
 package com.spk.web.myfirstws.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spk.web.myfirstws.SpringApplicationContext;
+import com.spk.web.myfirstws.service.UserService;
+import com.spk.web.myfirstws.shared.dto.UserDto;
 import com.spk.web.myfirstws.ui.model.request.UserLoginRequest;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -53,6 +56,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                 .compact();
 
+        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+        UserDto userDto = userService.getUser(userName);
+
         response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+        response.addHeader("UserID", userDto.getUserId());
+
     }
 }

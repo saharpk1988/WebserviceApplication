@@ -17,4 +17,9 @@ public class MyFirstWsApplication {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public SpringApplicationContext springApplicationContext() {
+        return new SpringApplicationContext();
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.spk.web.myfirstws.service.impl;
 
-import com.spk.web.myfirstws.UserRepository;
+import com.spk.web.myfirstws.io.repositories.UserRepository;
 import com.spk.web.myfirstws.io.entity.UserEntity;
 import com.spk.web.myfirstws.service.UserService;
 import com.spk.web.myfirstws.shared.Utils;
@@ -49,5 +49,14 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findUserByEmail(email);
         if (userEntity == null) throw new UsernameNotFoundException(email);
         return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+    }
+
+    @Override
+    public UserDto getUser(String email) {
+        UserEntity userEntity = userRepository.findUserByEmail(email);
+        if (userEntity == null) throw new UsernameNotFoundException(email);
+        UserDto returnValue = new UserDto();
+        BeanUtils.copyProperties(userEntity, returnValue);
+        return returnValue;
     }
 }

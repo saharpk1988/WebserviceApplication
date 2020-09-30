@@ -1,4 +1,4 @@
-package com.spk.web.myfirstws;
+package com.spk.web.myfirstws.io.repositories;
 
 import com.spk.web.myfirstws.io.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
