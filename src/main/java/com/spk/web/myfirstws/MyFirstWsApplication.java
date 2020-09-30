@@ -22,4 +22,5 @@ public class MyFirstWsApplication {
         return new SpringApplicationContext();
     }
 
+
 }
