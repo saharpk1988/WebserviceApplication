@@ -1,5 +1,6 @@
 package com.spk.web.myfirstws;
 
+import com.spk.web.myfirstws.security.AppProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,11 @@ public class MyFirstWsApplication {
     @Bean
     public SpringApplicationContext springApplicationContext() {
         return new SpringApplicationContext();
+    }
+
+    @Bean(name = "AppProperties")
+    public AppProperties appProperties() {
+        return new AppProperties();
     }
 
 
