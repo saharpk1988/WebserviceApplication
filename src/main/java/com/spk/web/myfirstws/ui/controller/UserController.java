@@ -3,6 +3,7 @@ package com.spk.web.myfirstws.ui.controller;
 import com.spk.web.myfirstws.service.UserService;
 import com.spk.web.myfirstws.shared.dto.UserDto;
 import com.spk.web.myfirstws.ui.model.request.UserDetailsRequest;
+import com.spk.web.myfirstws.ui.model.response.ErrorMessages;
 import com.spk.web.myfirstws.ui.model.response.UserRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,10 @@ public class UserController {
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public UserRest createUser(@RequestBody UserDetailsRequest userDetails) {
+    public UserRest createUser(@RequestBody UserDetailsRequest userDetails) throws Exception {
+        if (userDetails.getFirstName().isEmpty())
+            throw new Exception(ErrorMessages.MISSING_REQUESTED_FIELD.getMessage());
+
         UserRest returnValue = new UserRest();
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetails, userDto);
