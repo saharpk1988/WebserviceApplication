@@ -10,5 +10,4 @@ public interface UserService extends UserDetailsService {
 
     UserDto getUserById(String id);
 
-
 }
