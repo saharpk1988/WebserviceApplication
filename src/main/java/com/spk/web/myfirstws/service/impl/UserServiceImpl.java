@@ -68,4 +68,8 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(userEntity, returnValue);
         return returnValue;
     }
+
+    public UserDto updateUser(UserDto userDto) {
+        return null;
+    }
 }

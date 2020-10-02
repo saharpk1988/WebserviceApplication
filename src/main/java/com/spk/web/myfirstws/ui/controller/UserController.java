@@ -29,9 +29,9 @@ public class UserController {
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public UserRest createUser(@RequestBody UserDetailsRequest userDetails) throws Exception {
+
         if (userDetails.getFirstName().isEmpty())
             throw new NullPointerException(ErrorMessages.MISSING_REQUESTED_FIELD.getMessage());
-
         UserRest returnValue = new UserRest();
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetails, userDto);
@@ -40,12 +40,20 @@ public class UserController {
         return returnValue;
     }
 
-    @PutMapping
-    public String updateUser(){
-        return "first web app update user was called.";
+    @PutMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            path = "/{id}")
+    public UserRest updateUser(@PathVariable String id, @RequestBody UserDetailsRequest userDetails) {
+        UserRest returnValue = new UserRest();
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(userDetails, userDto);
+        UserDto updatedUser = userService.updateUser(userDto);
+        BeanUtils.copyProperties(updatedUser, returnValue);
+        return returnValue;
     }
+
     @DeleteMapping
-    public String deleteUser(){
+    public String deleteUser() {
         return "first web app delete user was called.";
     }
 
