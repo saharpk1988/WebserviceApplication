@@ -1,10 +1,12 @@
 package com.spk.web.myfirstws.service.impl;
 
+import com.spk.web.myfirstws.exceptions.UserServiceException;
 import com.spk.web.myfirstws.io.repositories.UserRepository;
 import com.spk.web.myfirstws.io.entity.UserEntity;
 import com.spk.web.myfirstws.service.UserService;
 import com.spk.web.myfirstws.shared.Utils;
 import com.spk.web.myfirstws.shared.dto.UserDto;
+import com.spk.web.myfirstws.ui.model.response.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -64,12 +66,22 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(String userId) {
         UserDto returnValue = new UserDto();
         UserEntity userEntity = userRepository.findByUserId(userId);
-        if (userEntity == null) throw new UsernameNotFoundException(userId);
+        if (userEntity == null) throw new UsernameNotFoundException(ErrorMessages.NO_RECORD_FOUND.getMessage());
         BeanUtils.copyProperties(userEntity, returnValue);
         return returnValue;
     }
 
-    public UserDto updateUser(UserDto userDto) {
-        return null;
+    @Override
+    public UserDto updateUser(String userId, UserDto userDto) {
+        UserDto returnValue = new UserDto();
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        if (userEntity == null) throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getMessage());
+        userEntity.setFirstName(userDto.getFirstName());
+        userEntity.setLastName(userDto.getLastName());
+        userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+        //Saving user details in the database
+        UserEntity updatedUser = userRepository.save(userEntity);
+        BeanUtils.copyProperties(updatedUser, returnValue);
+        return returnValue;
     }
 }

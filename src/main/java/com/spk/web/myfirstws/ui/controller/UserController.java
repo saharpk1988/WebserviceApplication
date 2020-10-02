@@ -47,7 +47,7 @@ public class UserController {
         UserRest returnValue = new UserRest();
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetails, userDto);
-        UserDto updatedUser = userService.updateUser(userDto);
+        UserDto updatedUser = userService.updateUser(id, userDto);
         BeanUtils.copyProperties(updatedUser, returnValue);
         return returnValue;
     }
