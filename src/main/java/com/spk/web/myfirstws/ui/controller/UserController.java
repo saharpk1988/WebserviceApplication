@@ -4,6 +4,8 @@ import com.spk.web.myfirstws.service.UserService;
 import com.spk.web.myfirstws.shared.dto.UserDto;
 import com.spk.web.myfirstws.ui.model.request.UserDetailsRequest;
 import com.spk.web.myfirstws.ui.model.response.ErrorMessages;
+import com.spk.web.myfirstws.ui.model.response.Operations;
+import com.spk.web.myfirstws.ui.model.response.OperationStatusModel;
 import com.spk.web.myfirstws.ui.model.response.UserRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +54,12 @@ public class UserController {
         return returnValue;
     }
 
-    @DeleteMapping
-    public String deleteUser() {
-        return "first web app delete user was called.";
+    @DeleteMapping(path = "/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public OperationStatusModel deleteUser(@PathVariable String id) {
+        OperationStatusModel returnValue = new OperationStatusModel(Operations.DELETE.name(), Operations.SUCESS.name());
+        returnValue.setOperationName(Operations.DELETE.name());
+        return returnValue;
     }
 
 }
