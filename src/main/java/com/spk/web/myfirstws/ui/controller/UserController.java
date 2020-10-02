@@ -30,7 +30,7 @@ public class UserController {
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public UserRest createUser(@RequestBody UserDetailsRequest userDetails) throws Exception {
         if (userDetails.getFirstName().isEmpty())
-            throw new Exception(ErrorMessages.MISSING_REQUESTED_FIELD.getMessage());
+            throw new NullPointerException(ErrorMessages.MISSING_REQUESTED_FIELD.getMessage());
 
         UserRest returnValue = new UserRest();
         UserDto userDto = new UserDto();
