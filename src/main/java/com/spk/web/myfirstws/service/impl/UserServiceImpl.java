@@ -1,8 +1,8 @@
 package com.spk.web.myfirstws.service.impl;
 
 import com.spk.web.myfirstws.exceptions.UserServiceException;
-import com.spk.web.myfirstws.io.repositories.UserRepository;
 import com.spk.web.myfirstws.io.entity.UserEntity;
+import com.spk.web.myfirstws.io.repositories.UserRepository;
 import com.spk.web.myfirstws.service.UserService;
 import com.spk.web.myfirstws.shared.Utils;
 import com.spk.web.myfirstws.shared.dto.UserDto;
@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -91,4 +92,11 @@ public class UserServiceImpl implements UserService {
         if (userEntity == null) throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getMessage());
         userRepository.delete(userEntity);
     }
+
+    @Override
+    public List<UserDto> getUsers(int page, int limit) {
+        //
+        return null;
+    }
 }
+
