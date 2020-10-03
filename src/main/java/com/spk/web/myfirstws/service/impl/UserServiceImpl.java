@@ -9,6 +9,9 @@ import com.spk.web.myfirstws.shared.dto.UserDto;
 import com.spk.web.myfirstws.ui.model.response.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -95,8 +98,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getUsers(int page, int limit) {
-        //
-        return null;
+        //API users do not have to provide 0 for page 1
+        if (page > 0) page -= 1;
+
+        List<UserDto> returnValue = new ArrayList<>();
+        Pageable pageableRequest = PageRequest.of(page, limit);
+        Page<UserEntity> usersPage = userRepository.findAll(pageableRequest);
+        List<UserEntity> usersList = usersPage.getContent();
+        for (UserEntity users : usersList) {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(users, userDto);
+            returnValue.add(userDto);
+        }
+        return returnValue;
     }
 }
 
