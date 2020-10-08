@@ -7,6 +7,7 @@ import com.spk.web.myfirstws.ui.model.response.ErrorMessages;
 import com.spk.web.myfirstws.ui.model.response.OperationStatusModel;
 import com.spk.web.myfirstws.ui.model.response.Operations;
 import com.spk.web.myfirstws.ui.model.response.UserRest;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -37,9 +38,9 @@ public class UserController {
 
         if (userDetails.getFirstName().isEmpty())
             throw new NullPointerException(ErrorMessages.MISSING_REQUESTED_FIELD.getMessage());
+        ModelMapper modelMapper = new ModelMapper();
         UserRest returnValue = new UserRest();
-        UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(userDetails, userDto);
+        UserDto userDto = modelMapper.map(userDetails, UserDto.class);
         UserDto createdUser = userService.createUser(userDto);
         BeanUtils.copyProperties(createdUser, returnValue);
         return returnValue;
