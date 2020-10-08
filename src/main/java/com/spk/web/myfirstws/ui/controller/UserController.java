@@ -1,5 +1,6 @@
 package com.spk.web.myfirstws.ui.controller;
 
+import com.spk.web.myfirstws.exceptions.UserServiceException;
 import com.spk.web.myfirstws.service.AddressService;
 import com.spk.web.myfirstws.service.UserService;
 import com.spk.web.myfirstws.shared.dto.AddressDto;
@@ -23,6 +24,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    AddressService addressService;
     @Autowired
     AddressService addressesService;
 
@@ -96,6 +99,18 @@ public class UserController {
             returnValue = modelMapper.map(addressList, listType);
         }
         return returnValue;
+    }
+
+    //https://localhost:8443/my-first-ws/users/<userId>/addresses/addressId
+    @GetMapping(path = "/{id}/addresses/{addressId}",
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public AddressesRest getUserAddress(@PathVariable String id, @PathVariable String addressId) {
+        if (userService.getUserById(id) == null)
+            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getMessage());
+        AddressDto addressDto = addressService.getAddress(addressId);
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(addressDto, AddressesRest.class);
+
     }
 
 }

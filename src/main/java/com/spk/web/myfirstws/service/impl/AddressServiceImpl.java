@@ -1,5 +1,6 @@
 package com.spk.web.myfirstws.service.impl;
 
+import com.spk.web.myfirstws.exceptions.UserServiceException;
 import com.spk.web.myfirstws.io.entity.AddressEntity;
 import com.spk.web.myfirstws.io.entity.UserEntity;
 import com.spk.web.myfirstws.io.repositories.AddressRepository;
@@ -35,5 +36,15 @@ public class AddressServiceImpl implements AddressService {
 
         return returnValue;
 
+    }
+
+    @Override
+    public AddressDto getAddress(String addressId) {
+        AddressDto returnValue = null;
+        AddressEntity addressEntity = addressRepository.findByAddressId(addressId);
+        if (addressEntity == null) throw new UserServiceException("The Address with provided id is not found.");
+
+        returnValue = new ModelMapper().map(addressEntity, AddressDto.class);
+        return returnValue;
     }
 }
