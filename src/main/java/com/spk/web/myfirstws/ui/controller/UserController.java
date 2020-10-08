@@ -1,17 +1,20 @@
 package com.spk.web.myfirstws.ui.controller;
 
+import com.spk.web.myfirstws.exceptions.UserServiceException;
+import com.spk.web.myfirstws.service.AddressService;
 import com.spk.web.myfirstws.service.UserService;
+import com.spk.web.myfirstws.shared.dto.AddressDto;
 import com.spk.web.myfirstws.shared.dto.UserDto;
 import com.spk.web.myfirstws.ui.model.request.UserDetailsRequest;
-import com.spk.web.myfirstws.ui.model.response.ErrorMessages;
-import com.spk.web.myfirstws.ui.model.response.OperationStatusModel;
-import com.spk.web.myfirstws.ui.model.response.Operations;
-import com.spk.web.myfirstws.ui.model.response.UserRest;
+import com.spk.web.myfirstws.ui.model.response.*;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,13 +24,17 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    AddressService addressService;
+    @Autowired
+    AddressService addressesService;
 
     @GetMapping(path = "/{id}",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public UserRest getUser(@PathVariable String id) {
-        UserRest returnValue = new UserRest();
+        ModelMapper modelMapper = new ModelMapper();
         UserDto userDto = userService.getUserById(id);
-        BeanUtils.copyProperties(userDto, returnValue);
+        UserRest returnValue = modelMapper.map(userDto, UserRest.class);
         return returnValue;
     }
 
@@ -37,11 +44,11 @@ public class UserController {
 
         if (userDetails.getFirstName().isEmpty())
             throw new NullPointerException(ErrorMessages.MISSING_REQUESTED_FIELD.getMessage());
+        ModelMapper modelMapper = new ModelMapper();
         UserRest returnValue = new UserRest();
-        UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(userDetails, userDto);
+        UserDto userDto = modelMapper.map(userDetails, UserDto.class);
         UserDto createdUser = userService.createUser(userDto);
-        BeanUtils.copyProperties(createdUser, returnValue);
+        returnValue = modelMapper.map(createdUser, UserRest.class);
         return returnValue;
     }
 
@@ -49,11 +56,11 @@ public class UserController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             path = "/{id}")
     public UserRest updateUser(@PathVariable String id, @RequestBody UserDetailsRequest userDetails) {
-        UserRest returnValue = new UserRest();
+        ModelMapper modelMapper = new ModelMapper();
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetails, userDto);
         UserDto updatedUser = userService.updateUser(id, userDto);
-        BeanUtils.copyProperties(updatedUser, returnValue);
+        UserRest returnValue = modelMapper.map(updatedUser, UserRest.class);
         return returnValue;
     }
 
@@ -69,14 +76,41 @@ public class UserController {
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "limit", defaultValue = "7") int limit) {
+        ModelMapper modelMapper = new ModelMapper();
         List<UserRest> returnValue = new ArrayList<>();
         List<UserDto> userDtoList = userService.getUsers(page, limit);
         for (UserDto userDto : userDtoList) {
-            UserRest userModel = new UserRest();
-            BeanUtils.copyProperties(userDto, userModel);
+            UserRest userModel = modelMapper.map(userDto, UserRest.class);
             returnValue.add(userModel);
         }
         return returnValue;
+    }
+
+    //https://localhost:8443/my-first-ws/users/<userId>/addresses
+    @GetMapping(path = "/{id}/addresses",
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public List<AddressesRest> getUserAddresses(@PathVariable String id) {
+        List<AddressesRest> returnValue = new ArrayList<>();
+        List<AddressDto> addressList = addressesService.getAddresses(id);
+        if (addressList != null && !addressList.isEmpty()) {
+            ModelMapper modelMapper = new ModelMapper();
+            Type listType = new TypeToken<List<AddressesRest>>() {
+            }.getType();
+            returnValue = modelMapper.map(addressList, listType);
+        }
+        return returnValue;
+    }
+
+    //https://localhost:8443/my-first-ws/users/<userId>/addresses/addressId
+    @GetMapping(path = "/{id}/addresses/{addressId}",
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public AddressesRest getUserAddress(@PathVariable String id, @PathVariable String addressId) {
+        if (userService.getUserById(id) == null)
+            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getMessage());
+        AddressDto addressDto = addressService.getAddress(addressId);
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper.map(addressDto, AddressesRest.class);
+
     }
 
 }
