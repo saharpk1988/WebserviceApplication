@@ -5,8 +5,10 @@ import com.spk.web.myfirstws.io.entity.UserEntity;
 import com.spk.web.myfirstws.io.repositories.UserRepository;
 import com.spk.web.myfirstws.service.UserService;
 import com.spk.web.myfirstws.shared.Utils;
+import com.spk.web.myfirstws.shared.dto.AddressDto;
 import com.spk.web.myfirstws.shared.dto.UserDto;
 import com.spk.web.myfirstws.ui.model.response.ErrorMessages;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,20 +34,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        //First we copy information from userDto in the userEntity and for this to work the fields in UserDto class must match UserEntity class:
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(userDto, userEntity);
-
         if (userRepository.findUserByEmail(userDto.getEmail()) != null)
             throw new RuntimeException("This user already exists.");
+
+        for (int i = 0; i < userDto.getAddresses().size(); i++) {
+            AddressDto address = userDto.getAddresses().get(i);
+            address.setUserDetails(userDto);
+            address.setAddressId(utils.generateAddressId(30));
+            userDto.getAddresses().set(i, address);
+        }
+
+        //First we copy information from userDto in the userEntity and for this to work the fields in UserDto class must match UserEntity class:
+        ModelMapper modelMapper = new ModelMapper();
+
+        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
+
         String publicUserId = utils.generateUserId(30);
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         userEntity.setUserId(publicUserId);
 
-
         UserEntity storedUserDetails = userRepository.save(userEntity);
-        UserDto returnValue = new UserDto();
-        BeanUtils.copyProperties(storedUserDetails, returnValue);
+        UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
+
         return returnValue;
 
     }
