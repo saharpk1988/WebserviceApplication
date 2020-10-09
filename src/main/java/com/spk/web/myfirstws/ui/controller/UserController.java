@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("users") // http://localhost:8080/users
+@RequestMapping("/users") // http://localhost:8080/users
 public class UserController {
 
     @Autowired
@@ -103,6 +103,15 @@ public class UserController {
             }.getType();
             returnValue = modelMapper.map(addressList, listType);
         }
+
+        for (AddressesRest addressesRest : returnValue) {
+            Link selfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
+                    .getUserAddress(id, addressesRest.getAddressId()))
+                    .withSelfRel();
+            addressesRest.add(selfLink);
+
+        }
+
         Link userLink = WebMvcLinkBuilder.linkTo(UserController.class).slash(id)
                 .withRel("user");
         Link selfLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class).getUserAddresses(id))
