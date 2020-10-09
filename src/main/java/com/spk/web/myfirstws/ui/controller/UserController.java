@@ -11,6 +11,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -101,7 +103,7 @@ public class UserController {
         return returnValue;
     }
 
-    //https://localhost:8443/my-first-ws/users/<userId>/addresses/addressId
+    //https://localhost:8443/my-first-ws/users/<userId>/addresses/<addressId>
     @GetMapping(path = "/{id}/addresses/{addressId}",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public AddressesRest getUserAddress(@PathVariable String id, @PathVariable String addressId) {
@@ -109,7 +111,23 @@ public class UserController {
             throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getMessage());
         AddressDto addressDto = addressService.getAddress(addressId);
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(addressDto, AddressesRest.class);
+        AddressesRest returnValue = modelMapper.map(addressDto, AddressesRest.class);
+
+        //https://localhost:8443/my-first-ws/users/<userId>
+        Link userLink = WebMvcLinkBuilder.linkTo(UserController.class).slash(id).withRel("user");
+        //https://localhost:8443/my-first-ws/users/<userId>/addresses
+        Link userAddressesLink = WebMvcLinkBuilder.linkTo(UserController.class)
+                .slash(id).slash("addresses").withRel("addresses");
+        //https://localhost:8443/my-first-ws/users/<userId>/addresses/<addressId>
+        Link selfLink = WebMvcLinkBuilder.linkTo(UserController.class)
+                .slash(id).slash("addresses").slash(addressId)
+                .withSelfRel();
+
+        returnValue.add(userLink);
+        returnValue.add(userAddressesLink);
+        returnValue.add(selfLink);
+
+        return returnValue;
 
     }
 
