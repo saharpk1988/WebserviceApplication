@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -106,7 +108,7 @@ public class UserController {
     //https://localhost:8443/my-first-ws/users/<userId>/addresses/<addressId>
     @GetMapping(path = "/{id}/addresses/{addressId}",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public AddressesRest getUserAddress(@PathVariable String id, @PathVariable String addressId) {
+    public EntityModel<AddressesRest> getUserAddress(@PathVariable String id, @PathVariable String addressId) {
         if (userService.getUserById(id) == null)
             throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getMessage());
         AddressDto addressDto = addressService.getAddress(addressId);
@@ -123,11 +125,11 @@ public class UserController {
                 .slash(id).slash("addresses").slash(addressId)
                 .withSelfRel();
 
-        returnValue.add(userLink);
-        returnValue.add(userAddressesLink);
-        returnValue.add(selfLink);
+        //returnValue.add(userLink);
+        //returnValue.add(userAddressesLink);
+        //returnValue.add(selfLink);
 
-        return returnValue;
+        return EntityModel.of(returnValue, Arrays.asList(userLink, userAddressesLink, selfLink));
 
     }
 
