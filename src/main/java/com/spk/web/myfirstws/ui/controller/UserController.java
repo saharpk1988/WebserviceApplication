@@ -75,7 +75,7 @@ public class UserController {
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName(Operations.DELETE.name());
         userService.deleteUser(id);
-        returnValue.setOperationResult(Operations.SUCESS.name());
+        returnValue.setOperationResult(Operations.SUCCESS.name());
         return returnValue;
     }
 
