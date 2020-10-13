@@ -1,0 +1,3 @@
+[submodule "EmailVerificationService"]
+	path = EmailVerificationService
+	url = https://github.com/saharpk1988/EmailVerificationService.git
