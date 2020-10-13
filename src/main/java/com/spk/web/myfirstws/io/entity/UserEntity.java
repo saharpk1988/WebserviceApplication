@@ -92,7 +92,7 @@ public class UserEntity implements Serializable {
         this.emailVerificationToken = emailVerificationTocken;
     }
 
-    public boolean isEmailVerificationStatus() {
+    public boolean getEmailVerificationStatus() {
         return emailVerificationStatus;
     }
 
@@ -107,4 +107,5 @@ public class UserEntity implements Serializable {
     public void setAddresses(List<AddressEntity> addresses) {
         this.addresses = addresses;
     }
+
 }
