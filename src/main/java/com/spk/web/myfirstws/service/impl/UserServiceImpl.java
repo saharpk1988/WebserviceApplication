@@ -53,6 +53,9 @@ public class UserServiceImpl implements UserService {
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         userEntity.setUserId(publicUserId);
 
+        userEntity.setEmailVerificationToken(utils.generateEmailVerificationToken(publicUserId));
+        userEntity.setEmailVerificationStatus(false);
+
         UserEntity storedUserDetails = userRepository.save(userEntity);
         UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
 

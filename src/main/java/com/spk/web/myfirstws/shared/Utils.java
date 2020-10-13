@@ -3,6 +3,7 @@ package com.spk.web.myfirstws.shared;
 import com.spk.web.myfirstws.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -45,5 +46,15 @@ public class Utils {
 
     }
 
+    public String generateEmailVerificationToken(String userId) {
+
+        String token = Jwts.builder()
+                .setSubject(userId)
+                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
+                .compact();
+
+        return token;
+    }
 
 }
