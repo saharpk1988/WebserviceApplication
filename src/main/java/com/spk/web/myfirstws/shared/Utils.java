@@ -1,8 +1,12 @@
 package com.spk.web.myfirstws.shared;
 
+import com.spk.web.myfirstws.security.SecurityConstants;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.util.Date;
 import java.util.Random;
 
 @Component
@@ -29,7 +33,16 @@ public class Utils {
 
 
     public static boolean hasTokenExpired(String token) {
-        return false;
+
+        Claims claims = Jwts.parser()
+                .setSigningKey(SecurityConstants.getTokenSecret())
+                .parseClaimsJws(token).getBody();
+
+        Date tokenExpirationDate = claims.getExpiration();
+        Date todayDate = new Date();
+
+        return tokenExpirationDate.before(todayDate);
+
     }
 
 
