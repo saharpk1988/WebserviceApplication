@@ -19,7 +19,7 @@ public class AmazonSES {
             "<p>Thank you for registering with our mobile app. To complete registration process and be " +
             "able to log in, click on the following link: "
             //Note: When we deploy the application on the production server in Amazon, this url must be updated
-            + "<a href='http://c2-18-159-107-118.eu-central-1.compute.amazonaws.com:8080/email-verification-service/email-verification.html?token=$tokenValue'>" +
+            + "<a href='http://ec2-54-93-208-152.eu-central-1.compute.amazonaws.com:8080/email-verification-service/email-verification.html?token=$tokenValue'>" +
             "Final step to complete your registration"
             + "</a><br/><br/>"
             + "Thank you! And we are waiting for you inside!";
@@ -29,7 +29,7 @@ public class AmazonSES {
             + "Thank you for registering with our mobile app. To complete registration process and be able to log in, "
             + "open then the following URL in your browser window: "
             //Note: When we deploy the application on the production server in Amazon, this url must be updated
-            + "http://ec2-18-159-107-118.eu-central-1.compute.amazonaws.com:8080/email-verification-service/email-verification.html?token=$tokenValue"
+            + "http://ec2-54-93-208-152.eu-central-1.compute.amazonaws.com:8080/email-verification-service/email-verification.html?token=$tokenValue"
             + "Thank you! And we are waiting for you inside!";
 
     public void verifyEmail(UserDto userDto) {
