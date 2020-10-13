@@ -4,6 +4,7 @@ import com.spk.web.myfirstws.exceptions.UserServiceException;
 import com.spk.web.myfirstws.io.entity.UserEntity;
 import com.spk.web.myfirstws.io.repositories.UserRepository;
 import com.spk.web.myfirstws.service.UserService;
+import com.spk.web.myfirstws.shared.AmazonSES;
 import com.spk.web.myfirstws.shared.Utils;
 import com.spk.web.myfirstws.shared.dto.AddressDto;
 import com.spk.web.myfirstws.shared.dto.UserDto;
@@ -58,6 +59,10 @@ public class UserServiceImpl implements UserService {
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
         UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
+
+
+        // Send an email message to user to verify their email address
+        new AmazonSES().verifyEmail(returnValue);
 
         return returnValue;
 
