@@ -122,5 +122,11 @@ public class UserServiceImpl implements UserService {
         }
         return returnValue;
     }
+
+
+    @Override
+    public boolean verifyEmailToken(String token) {
+        return false;
+    }
 }
 

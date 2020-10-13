@@ -146,7 +146,28 @@ public class UserController {
         //returnValue.add(selfLink);
 
         return EntityModel.of(returnValue, Arrays.asList(userLink, userAddressesLink, selfLink));
+    }
+
+
+    /*
+     * https://localhost:8443/my-first-ws/users/email-verification?token={tokenValue}
+     */
+    @GetMapping(path = "/email-verification", produces = {MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE})
+    public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
+        OperationStatusModel returnValue = new OperationStatusModel();
+        returnValue.setOperationName(Operations.VERIFY_EMAIL.name());
+
+        boolean isVerified = userService.verifyEmailToken(token);
+        if (isVerified) {
+            returnValue.setOperationResult(Operations.SUCCESS.name());
+        } else {
+            returnValue.setOperationResult(Operations.ERROR.name());
+        }
+
+        return returnValue;
 
     }
+
 
 }
