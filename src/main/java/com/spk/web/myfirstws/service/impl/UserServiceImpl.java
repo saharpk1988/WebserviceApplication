@@ -153,5 +153,11 @@ public class UserServiceImpl implements UserService {
 
         return returnValue;
     }
+
+
+    @Override
+    public boolean requestPasswordReset(String email) {
+        return false;
+    }
 }
 
