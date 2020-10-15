@@ -14,6 +14,7 @@ public class SecurityConstants {
 
     public static final String SIGN_UP_URL = "/users";
     public static final String VERIFICATION_EMAIL_URL = "/users/email-verification";
+    public static final String PASSWORD_RESET_REQUEST_URL = "/users/password-reset-request";
 
 
     //This will be used in the encryption of value of the access token
