@@ -5,6 +5,7 @@ import com.spk.web.myfirstws.service.AddressService;
 import com.spk.web.myfirstws.service.UserService;
 import com.spk.web.myfirstws.shared.dto.AddressDto;
 import com.spk.web.myfirstws.shared.dto.UserDto;
+import com.spk.web.myfirstws.ui.model.request.PasswordResetModel;
 import com.spk.web.myfirstws.ui.model.request.PasswordResetRequestModel;
 import com.spk.web.myfirstws.ui.model.request.UserDetailsRequest;
 import com.spk.web.myfirstws.ui.model.response.*;
@@ -178,6 +179,23 @@ public class UserController {
         returnValue.setOperationName(Operations.REQUEST_PASSWORD_RESET.name());
         returnValue.setOperationResult(Operations.ERROR.name());
         if (operationResult) {
+            returnValue.setOperationResult(Operations.SUCCESS.name());
+        }
+        return returnValue;
+    }
+
+    // http://localhost:8080/my-first-ws/users/password-reset
+    @PostMapping(path = "/password-reset",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordResetModel) {
+        OperationStatusModel returnValue = new OperationStatusModel();
+        boolean operationalResult = userService.resetPassword(
+                passwordResetModel.getToken(),
+                passwordResetModel.getPassword());
+        returnValue.setOperationName(Operations.PASSWORD_RESET.name());
+        returnValue.setOperationResult(Operations.ERROR.name());
+
+        if (operationalResult) {
             returnValue.setOperationResult(Operations.SUCCESS.name());
         }
         return returnValue;
