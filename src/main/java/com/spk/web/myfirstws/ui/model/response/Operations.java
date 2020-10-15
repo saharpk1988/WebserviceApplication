@@ -4,5 +4,7 @@ public enum Operations {
     DELETE, // operationName
     ERROR, // operationResult
     SUCCESS,    // operationResult
-    VERIFY_EMAIL // operationName
+    VERIFY_EMAIL, // operationName
+    REQUEST_PASSWORD_RESET, // operationName
+    PASSWORD_RESET // operationName
 }
