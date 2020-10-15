@@ -1,7 +1,9 @@
 package com.spk.web.myfirstws.service.impl;
 
 import com.spk.web.myfirstws.exceptions.UserServiceException;
+import com.spk.web.myfirstws.io.entity.PasswordResetTokenEntity;
 import com.spk.web.myfirstws.io.entity.UserEntity;
+import com.spk.web.myfirstws.io.repositories.PasswordResetTokenRepository;
 import com.spk.web.myfirstws.io.repositories.UserRepository;
 import com.spk.web.myfirstws.service.UserService;
 import com.spk.web.myfirstws.shared.AmazonSES;
@@ -32,6 +34,8 @@ public class UserServiceImpl implements UserService {
     Utils utils;
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -157,7 +161,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean requestPasswordReset(String email) {
-        return false;
+        boolean returnValue = false;
+
+        UserEntity userEntity = userRepository.findUserByEmail(email);
+        if (userEntity == null) {
+            return returnValue;
+        }
+
+        String token = Utils.generatePasswordToken(userEntity.getUserId());
+
+        PasswordResetTokenEntity passwordResetTokenEntity = new PasswordResetTokenEntity();
+        passwordResetTokenEntity.setToken(token);
+        passwordResetTokenEntity.setUserDetails(userEntity);
+        passwordResetTokenRepository.save(passwordResetTokenEntity);
+
+        returnValue = AmazonSES.sendPasswordResetRequest(
+                userEntity.getFirstName(),
+                userEntity.getEmail(),
+                token
+        );
+        return returnValue;
     }
 }
 

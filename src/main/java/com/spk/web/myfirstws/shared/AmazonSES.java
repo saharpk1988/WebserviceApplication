@@ -54,4 +54,10 @@ public class AmazonSES {
         client.sendEmail(request);
         System.out.println("Emil sent!");
     }
+
+
+    public static boolean sendPasswordResetRequest(String firstName, String email, String token) {
+        boolean returnValue = false;
+        return returnValue;
+    }
 }
