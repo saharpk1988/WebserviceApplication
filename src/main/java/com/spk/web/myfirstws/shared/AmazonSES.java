@@ -39,7 +39,7 @@ public class AmazonSES {
             + "<br/><p>Someone has requested to reset your password with our project. If it were not you, please ignore this email "
             + "otherwise please click on the link below to set a new password: "
             + "<br/><br/>"
-            + "<a href='http://localhost:8080/email-verification-service/password-reset.html?token=$tokenValue'>"
+            + "<a href='http://ec2-54-93-208-152.eu-central-1.compute.amazonaws.com:8080/email-verification-service/password-reset.html?token=$tokenValue'>"
             + "Click this link to reset password"
             + "</a><br/><br/>"
             + "Thank you!";
@@ -48,7 +48,7 @@ public class AmazonSES {
             "Hi, $firstName!"
             + "Someone has requested to reset your password with our project. If it were not you, please ignore this email "
             + "otherwise please open the link below in your browser to set a new password: "
-            + "http://localhost:8080/email-verification-service/password-reset.html?token=$tokenValue"
+            + "http://ec2-54-93-208-152.eu-central-1.compute.amazonaws.com:8080/email-verification-service/password-reset.html?token=$tokenValue"
             + "Thank you!";
 
     public void verifyEmail(UserDto userDto) {
