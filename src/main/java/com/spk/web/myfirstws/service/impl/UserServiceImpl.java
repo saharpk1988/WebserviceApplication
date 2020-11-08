@@ -36,6 +36,8 @@ public class UserServiceImpl implements UserService {
     BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     PasswordResetTokenRepository passwordResetTokenRepository;
+    @Autowired
+    AmazonSES amazonSES;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -48,7 +50,6 @@ public class UserServiceImpl implements UserService {
             address.setAddressId(utils.generateAddressId(30));
             userDto.getAddresses().set(i, address);
         }
-
         //First we copy information from userDto in the userEntity and for this to work the fields in UserDto class must match UserEntity class:
         ModelMapper modelMapper = new ModelMapper();
 
@@ -63,10 +64,8 @@ public class UserServiceImpl implements UserService {
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
         UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
-
-
         // Send an email message to user to verify their email address
-        new AmazonSES().verifyEmail(returnValue);
+        amazonSES.verifyEmail(returnValue);
 
         return returnValue;
 
