@@ -1,5 +1,6 @@
 package com.spk.web.myfirstws.service.impl;
 
+import com.spk.web.myfirstws.exceptions.UserServiceException;
 import com.spk.web.myfirstws.io.entity.AddressEntity;
 import com.spk.web.myfirstws.io.entity.UserEntity;
 import com.spk.web.myfirstws.io.repositories.UserRepository;
@@ -132,6 +133,22 @@ class UserServiceImplTest {
         assertThrows(UsernameNotFoundException.class,
                 () -> {
                     userService.getUser("sarar.pk@test.com");
+                }
+        );
+    }
+
+    @Test
+    final void createUserTest_UserServiceException() {
+        when(userRepository.findUserByEmail(anyString())).thenReturn(userEntity);
+        UserDto userDto = new UserDto();
+        userDto.setAddresses(getAddressesDto());
+        userDto.setFirstName("Sarar");
+        userDto.setLastName("Pk");
+        userDto.setPassword("1234567");
+        userDto.setEmail("sarar.pk@test.com");
+        assertThrows(UserServiceException.class,
+                () -> {
+                    userService.createUser(userDto);
                 }
         );
     }
