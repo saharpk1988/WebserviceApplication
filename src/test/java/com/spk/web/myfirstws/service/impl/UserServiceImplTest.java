@@ -3,14 +3,14 @@ package com.spk.web.myfirstws.service.impl;
 import com.spk.web.myfirstws.io.entity.UserEntity;
 import com.spk.web.myfirstws.io.repositories.UserRepository;
 import com.spk.web.myfirstws.shared.dto.UserDto;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -43,5 +43,15 @@ class UserServiceImplTest {
         assertNotNull(userDto);
         assertEquals("Sarar", userDto.getFirstName());
 
+    }
+
+    @Test()
+    final void testGetUser_UserNameNotFoundException() {
+        when(userRepository.findUserByEmail(anyString())).thenReturn(null);
+        assertThrows(UsernameNotFoundException.class,
+                () -> {
+                    userService.getUser("sarar.pk@test.com");
+                }
+        );
     }
 }
