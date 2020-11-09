@@ -36,7 +36,7 @@ public class UtilsTest {
 
     @Test
     //@Disabled
-    final void testHasTokenExpired() {
+    final void testHasTokenNotExpired() {
         String token = utils.generateEmailVerificationToken("hhsrpk78hgy");
         assertNotNull(token);
 
@@ -45,5 +45,13 @@ public class UtilsTest {
 
     }
 
+    @Test
+    final void testHasTokenExpired() {
+        String expiredToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1ZmJZVTdVekJ2VmhzV1FLRkVVUENMZmlKVW1yaUciLCJleHAiOjE2MDM2MzMwNTh9.hZeKe0rELZIvLVeo3FFumU8O9N11bGD4lN3ifkbyAHkFER04F5H_pUySpFMl6St8NJ7bATyRDxW_npCpmwjznQ";
+
+        boolean hasTokenExpired = Utils.hasTokenExpired(expiredToken);
+        assertTrue(hasTokenExpired);
+
+    }
 
 }
