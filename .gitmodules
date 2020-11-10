@@ -1,3 +1,6 @@
 [submodule "EmailVerificationService"]
 	path = EmailVerificationService
 	url = https://github.com/saharpk1988/EmailVerificationService.git
+[submodule "rest-assured-test"]
+	path = rest-assured-test
+	url = git@github.com:saharpk1988/RestAssuredTest.git
