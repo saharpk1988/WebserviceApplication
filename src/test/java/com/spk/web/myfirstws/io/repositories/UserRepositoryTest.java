@@ -25,8 +25,39 @@ public class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
+    private static boolean recordsCreated = false;
+
     @BeforeEach
     void setUp() throws Exception {
+
+        if (!recordsCreated) createRecords();
+    }
+
+    @Test
+    final void testGetVerifiedUsers() {
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<UserEntity> pages = userRepository.findAllUsersWithConfirmedEmailAddress(pageable);
+        assertNotNull(pages);
+
+        List<UserEntity> userEntities = pages.getContent();
+        assertNotNull(userEntities);
+        assertTrue(userEntities.size() == 2);
+    }
+
+
+    @Test
+    final void testFindUserByFirstLastName() {
+        String firstName = "Sarar";
+        String lastName = "Pk";
+        List<UserEntity> users = userRepository.findUserByFirstLastName(firstName, lastName);
+        assertNotNull(users);
+        assertTrue(users.size() == 2);
+
+        UserEntity user = users.get(0);
+        assertTrue(user.getFirstName().equalsIgnoreCase(firstName));
+    }
+
+    private void createRecords() {
         //Prepare User Entity
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstName("Sarar");
@@ -71,18 +102,13 @@ public class UserRepositoryTest {
         List<AddressEntity> addresses2 = new ArrayList<>();
         addresses2.add(addressEntity2);
         userRepository.save(userEntity2);
-    }
-
-    @Test
-    final void testGetVerifiedUsers() {
-        Pageable pageable = PageRequest.of(0, 2);
-        Page<UserEntity> pages = userRepository.findAllUsersWithConfirmedEmailAddress(pageable);
-        assertNotNull(pages);
-
-        List<UserEntity> userEntities = pages.getContent();
-        assertNotNull(userEntities);
-        assertTrue(userEntities.size() == 2);
-
+        recordsCreated = true;
     }
 
 }
+
+
+
+
+
+
