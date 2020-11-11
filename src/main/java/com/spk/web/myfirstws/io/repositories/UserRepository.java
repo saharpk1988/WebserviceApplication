@@ -3,10 +3,12 @@ package com.spk.web.myfirstws.io.repositories;
 import com.spk.web.myfirstws.io.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +30,18 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity, L
 
     @Query(value = "select * from users u where u.last_name=:lastName", nativeQuery = true)
     List<UserEntity> findUserByLastName(@Param("lastName") String lastName);
+
+    @Query(value = "select * from users u where u.first_name LIKE %:keyword% or u.last_name LIKE %:keyword%", nativeQuery = true)
+    List<UserEntity> findUsersByKeyword(@Param("keyword") String keyword);
+
+    @Query(value = "select u.first_name, u.last_name from users u where u.first_name LIKE %:keyword% or u.last_name LIKE %:keyword%", nativeQuery = true)
+    List<Object[]> findUserFirstNameAndLastNameByKeyword(@Param("keyword") String keyword);
+
+
+    @Transactional
+    @Modifying
+    @Query(value = "update users u set u.EMAIL_VERIFICATION_STATUS=:status where u.user_id=:id", nativeQuery = true)
+    void updateUserEmailVerificationStatus(@Param("status") boolean emailVerificationStatus, @Param("id") String userId);
 
 
 }

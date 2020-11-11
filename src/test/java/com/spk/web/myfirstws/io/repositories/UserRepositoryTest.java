@@ -68,6 +68,49 @@ public class UserRepositoryTest {
         assertTrue(user.getLastName().equalsIgnoreCase(lastName));
     }
 
+    @Test
+    final void testFindUsersByKeyword() {
+        String keyword = "ar";
+        List<UserEntity> users = userRepository.findUsersByKeyword(keyword);
+        assertNotNull(users);
+        assertTrue(users.size() == 2);
+
+        UserEntity user = users.get(0);
+        assertTrue(user.getFirstName().contains(keyword) || user.getFirstName().contains(keyword));
+    }
+
+    @Test
+    final void testFindUserFirstNameAndLastNameByKeyword() {
+        String keyword = "Sar";
+        List<Object[]> users = userRepository.findUserFirstNameAndLastNameByKeyword(keyword);
+        assertNotNull(users);
+
+        assertTrue(users.size() == 2);
+
+        Object[] user = users.get(0);
+
+        assertTrue(user.length == 2);
+
+        String userFirstName = String.valueOf(user[0]);
+        String userLastName = String.valueOf(user[1]);
+        assertNotNull(userFirstName);
+        assertNotNull(userLastName);
+        System.out.println("First Name= " + userFirstName);
+        System.out.println("Last Name= " + userLastName);
+
+    }
+
+    @Test
+    final void testUpdateUserEmailVerificationStatus() {
+        boolean emailVerificationStatus = false;
+        userRepository.updateUserEmailVerificationStatus(emailVerificationStatus, "100ps87ms");
+
+        UserEntity storedDetails = userRepository.findByUserId("100ps87ms");
+        boolean storedEmailVerificationStatus = storedDetails.getEmailVerificationStatus();
+
+        assertTrue(storedEmailVerificationStatus == emailVerificationStatus);
+    }
+
     private void createRecords() {
         //Prepare User Entity
         UserEntity userEntity = new UserEntity();
@@ -96,7 +139,7 @@ public class UserRepositoryTest {
         UserEntity userEntity2 = new UserEntity();
         userEntity2.setFirstName("Sarar");
         userEntity2.setLastName("Pk");
-        userEntity2.setUserId("100ps87ms");
+        userEntity2.setUserId("ps87ms100");
         userEntity2.setEncryptedPassword("1skpm8");
         userEntity2.setEmail("sarar.sol@email.com");
         userEntity2.setEmailVerificationStatus(true);
