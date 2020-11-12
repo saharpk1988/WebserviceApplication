@@ -25,6 +25,8 @@ public class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
+    private static String userId;
+
     private static boolean recordsCreated = false;
 
     @BeforeEach
@@ -70,7 +72,7 @@ public class UserRepositoryTest {
 
     @Test
     final void testFindUsersByKeyword() {
-        String keyword = "ar";
+        String keyword = "Sa";
         List<UserEntity> users = userRepository.findUsersByKeyword(keyword);
         assertNotNull(users);
         assertTrue(users.size() == 2);
@@ -103,7 +105,7 @@ public class UserRepositoryTest {
     @Test
     final void testUpdateUserEmailVerificationStatus() {
         boolean emailVerificationStatus = false;
-        userRepository.updateUserEmailVerificationStatus(emailVerificationStatus, "100ps87ms");
+        userRepository.updateUserEmailVerificationStatus(emailVerificationStatus, userId);
 
         UserEntity storedDetails = userRepository.findByUserId("100ps87ms");
         boolean storedEmailVerificationStatus = storedDetails.getEmailVerificationStatus();
@@ -111,12 +113,36 @@ public class UserRepositoryTest {
         assertTrue(storedEmailVerificationStatus == emailVerificationStatus);
     }
 
+    @Test
+    final void testFindUserEntityByUserId() {
+
+        UserEntity userEntity = userRepository.findUserEntityByUserId(userId);
+        assertNotNull(userEntity);
+        assertTrue(userEntity.getUserId().equals(userId));
+    }
+
+    @Test
+    final void testFindUserEntityFullNameById() {
+        List<Object[]> records = userRepository.findUserEntityFullNameById(userId);
+        assertNotNull(records);
+
+        assertTrue(records.size() == 1);
+
+        Object[] userFullName = records.get(0);
+        String firstName = String.valueOf(userFullName[0]);
+        String lastName = String.valueOf(userFullName[1]);
+
+        assertNotNull(firstName);
+        assertNotNull(lastName);
+    }
+
     private void createRecords() {
+        userId = "100ps87ms";
         //Prepare User Entity
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstName("Sarar");
         userEntity.setLastName("Pk");
-        userEntity.setUserId("100ps87ms");
+        userEntity.setUserId(userId);
         userEntity.setEncryptedPassword("abcdef");
         userEntity.setEmail("sahar.pk@email.com");
         userEntity.setEmailVerificationStatus(true);
