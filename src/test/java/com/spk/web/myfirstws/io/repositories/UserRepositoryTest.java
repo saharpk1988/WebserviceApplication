@@ -136,6 +136,17 @@ public class UserRepositoryTest {
         assertNotNull(lastName);
     }
 
+    @Test
+    final void testUpdateUserEntityEmailVerificationStatus() {
+
+        boolean emailVerificationStatus = false;
+        userRepository.updateUserEntityEmailVerificationStatus(emailVerificationStatus, userId);
+
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        assertNotNull(userEntity.getEmailVerificationStatus() == emailVerificationStatus);
+
+    }
+
     private void createRecords() {
         userId = "100ps87ms";
         //Prepare User Entity
