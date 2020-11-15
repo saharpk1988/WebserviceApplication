@@ -4,3 +4,6 @@
 [submodule "rest-assured-test"]
 	path = rest-assured-test
 	url = git@github.com:saharpk1988/RestAssuredTest.git
+[submodule "HttpClients"]
+	path = HttpClients
+	url = git@github.com:saharpk1988/HttpClients.git
