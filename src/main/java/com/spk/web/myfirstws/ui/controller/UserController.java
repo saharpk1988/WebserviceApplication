@@ -27,6 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users") // http://localhost:8080/users
+//@CrossOrigin(origins={"http://localhost:8088", "http:localhost:8084"})
 public class UserController {
 
     @Autowired
@@ -154,6 +155,7 @@ public class UserController {
     /*
      * https://localhost:8443/my-first-ws/users/email-verification?token={tokenValue}
      */
+    //@CrossOrigin(origins="http://localhost:8089")
     @GetMapping(path = "/email-verification", produces = {MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE})
     public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
