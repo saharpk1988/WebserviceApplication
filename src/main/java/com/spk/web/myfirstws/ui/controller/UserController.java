@@ -11,6 +11,7 @@ import com.spk.web.myfirstws.ui.model.request.UserDetailsRequest;
 import com.spk.web.myfirstws.ui.model.response.*;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
@@ -39,6 +40,8 @@ public class UserController {
     @Autowired
     AddressService addressesService;
 
+    @ApiOperation(value = "The Get User Details Web Service Endpoint",
+            notes = "${userController.GetUser.ApiOperation.Notes}")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
     })
@@ -50,6 +53,7 @@ public class UserController {
         UserRest returnValue = modelMapper.map(userDto, UserRest.class);
         return returnValue;
     }
+
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
