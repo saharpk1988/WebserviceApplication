@@ -2,6 +2,7 @@ package com.spk.web.myfirstws.io.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -36,6 +37,12 @@ public class UserEntity implements Serializable {
 
     @OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL)
     private List<AddressEntity> addresses;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id", referencedColumnName = "id"))
+    private Collection<RoleEntity> roles;
 
     public long getId() {
         return id;
