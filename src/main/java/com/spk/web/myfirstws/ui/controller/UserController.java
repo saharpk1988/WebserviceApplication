@@ -21,6 +21,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,7 @@ public class UserController {
     @Autowired
     AddressService addressesService;
 
+    @PostAuthorize("hasRole('ADMIN') or returnObject.userId==principal.userId")
     @ApiOperation(value = "The Get User Details Web Service Endpoint",
             notes = "${userController.GetUser.ApiOperation.Notes}")
     @ApiImplicitParams({
