@@ -6,6 +6,7 @@ import com.spk.web.myfirstws.io.entity.UserEntity;
 import com.spk.web.myfirstws.io.repositories.AuthorityRepository;
 import com.spk.web.myfirstws.io.repositories.RoleRepository;
 import com.spk.web.myfirstws.io.repositories.UserRepository;
+import com.spk.web.myfirstws.shared.Roles;
 import com.spk.web.myfirstws.shared.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -42,8 +43,8 @@ public class InitialUserSetUp {
         AuthorityEntity readAuthority = createAuthority("READ_AUTHORITY");
         AuthorityEntity writeAuthority = createAuthority("WRITE_AUTHORITY");
         AuthorityEntity deleteAuthority = createAuthority("DELETE_AUTHORITY");
-        RoleEntity roleUser = createRoles("ROLE_USER", Arrays.asList(readAuthority, writeAuthority));
-        RoleEntity roleAdmin = createRoles("ROLE_ADMIN", Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
+        RoleEntity roleUser = createRoles(Roles.ROLE_USER.name(), Arrays.asList(readAuthority, writeAuthority));
+        RoleEntity roleAdmin = createRoles(Roles.ROLE_ADMIN.name(), Arrays.asList(readAuthority, writeAuthority, deleteAuthority));
 
         if (roleAdmin == null) return;
 

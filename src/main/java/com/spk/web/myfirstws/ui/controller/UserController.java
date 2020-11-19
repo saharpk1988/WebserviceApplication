@@ -3,6 +3,7 @@ package com.spk.web.myfirstws.ui.controller;
 import com.spk.web.myfirstws.exceptions.UserServiceException;
 import com.spk.web.myfirstws.service.AddressService;
 import com.spk.web.myfirstws.service.UserService;
+import com.spk.web.myfirstws.shared.Roles;
 import com.spk.web.myfirstws.shared.dto.AddressDto;
 import com.spk.web.myfirstws.shared.dto.UserDto;
 import com.spk.web.myfirstws.ui.model.request.PasswordResetModel;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -67,6 +69,7 @@ public class UserController {
         ModelMapper modelMapper = new ModelMapper();
         UserRest returnValue = new UserRest();
         UserDto userDto = modelMapper.map(userDetails, UserDto.class);
+        userDto.setRoles(new HashSet<>(Arrays.asList(Roles.ROLE_USER.name())));
         UserDto createdUser = userService.createUser(userDto);
         returnValue = modelMapper.map(createdUser, UserRest.class);
         return returnValue;

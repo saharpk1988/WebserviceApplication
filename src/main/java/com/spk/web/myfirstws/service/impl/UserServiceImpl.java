@@ -2,8 +2,10 @@ package com.spk.web.myfirstws.service.impl;
 
 import com.spk.web.myfirstws.exceptions.UserServiceException;
 import com.spk.web.myfirstws.io.entity.PasswordResetTokenEntity;
+import com.spk.web.myfirstws.io.entity.RoleEntity;
 import com.spk.web.myfirstws.io.entity.UserEntity;
 import com.spk.web.myfirstws.io.repositories.PasswordResetTokenRepository;
+import com.spk.web.myfirstws.io.repositories.RoleRepository;
 import com.spk.web.myfirstws.io.repositories.UserRepository;
 import com.spk.web.myfirstws.security.UserPrincipal;
 import com.spk.web.myfirstws.service.UserService;
@@ -24,6 +26,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -38,6 +42,9 @@ public class UserServiceImpl implements UserService {
     PasswordResetTokenRepository passwordResetTokenRepository;
     @Autowired
     AmazonSES amazonSES;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -61,6 +68,17 @@ public class UserServiceImpl implements UserService {
 
         userEntity.setEmailVerificationToken(utils.generateEmailVerificationToken(publicUserId));
         userEntity.setEmailVerificationStatus(false);
+
+        // Set roles
+        Collection<RoleEntity> roleEntities = new HashSet<>();
+        for (String role : userDto.getRoles()) {
+            RoleEntity roleEntity = roleRepository.findByName(role);
+            if (roleEntity != null) {
+                roleEntities.add(roleEntity);
+            }
+        }
+        userEntity.setRoles(roleEntities);
+
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
         UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
