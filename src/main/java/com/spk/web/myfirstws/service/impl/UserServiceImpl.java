@@ -5,6 +5,7 @@ import com.spk.web.myfirstws.io.entity.PasswordResetTokenEntity;
 import com.spk.web.myfirstws.io.entity.UserEntity;
 import com.spk.web.myfirstws.io.repositories.PasswordResetTokenRepository;
 import com.spk.web.myfirstws.io.repositories.UserRepository;
+import com.spk.web.myfirstws.security.UserPrincipal;
 import com.spk.web.myfirstws.service.UserService;
 import com.spk.web.myfirstws.shared.AmazonSES;
 import com.spk.web.myfirstws.shared.Utils;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -76,9 +76,13 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findUserByEmail(email);
         if (userEntity == null) throw new UsernameNotFoundException(email);
 
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), userEntity.getEmailVerificationStatus(),
-                true, true, true, new ArrayList<>());
+        // return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), userEntity.getEmailVerificationStatus(),
+        //         true, true, true, new ArrayList<>());
         //return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+
+        return new UserPrincipal(userEntity);
+
+
     }
 
     @Override
