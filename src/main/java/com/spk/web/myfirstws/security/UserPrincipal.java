@@ -17,8 +17,19 @@ public class UserPrincipal implements UserDetails {
 
     UserEntity userEntity;
 
+    private String userId;
+
     public UserPrincipal(UserEntity userEntity) {
         this.userEntity = userEntity;
+        this.userId = userEntity.getUserId();
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     @Override

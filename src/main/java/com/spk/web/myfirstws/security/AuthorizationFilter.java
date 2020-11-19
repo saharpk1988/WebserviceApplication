@@ -50,9 +50,12 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             if (user != null) {
                 //UserRepository userRepository= (UserRepository) SpringApplicationContext.getBean("UserRepository");
                 UserEntity userEntity = userRepository.findUserByEmail(user);
+
+                if (userEntity == null) return null;
+
                 UserPrincipal userPrincipal = new UserPrincipal(userEntity);
 
-                return new UsernamePasswordAuthenticationToken(user, null, userPrincipal.getAuthorities());
+                return new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
             }
             return null;
         }
