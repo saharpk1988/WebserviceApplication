@@ -50,6 +50,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 //http://localhost:8080/my-first-ws/swagger-ui/index.html
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
                 .permitAll()
+                .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and().addFilter(getAuthenticationFilter())
                 .addFilter(new AuthorizationFilter(authenticationManager(), userRepository))
