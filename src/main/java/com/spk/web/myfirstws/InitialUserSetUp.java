@@ -48,6 +48,7 @@ public class InitialUserSetUp {
 
         if (roleAdmin == null) return;
 
+        if (userRepository.findUserByEmail("admin@test.com") != null) return;
         UserEntity adminUser = new UserEntity();
         adminUser.setFirstName("Admin");
         adminUser.setLastName("Admin");
@@ -56,6 +57,7 @@ public class InitialUserSetUp {
         adminUser.setUserId(utils.generateUserId(30));
         adminUser.setEncryptedPassword(bCryptPasswordEncoder.encode("admin123"));
         adminUser.setRoles(Arrays.asList(roleAdmin));
+
 
         userRepository.save(adminUser);
     }

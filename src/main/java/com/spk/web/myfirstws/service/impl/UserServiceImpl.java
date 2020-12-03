@@ -71,14 +71,16 @@ public class UserServiceImpl implements UserService {
 
         // Set roles
         Collection<RoleEntity> roleEntities = new HashSet<>();
-        for (String role : userDto.getRoles()) {
-            RoleEntity roleEntity = roleRepository.findByName(role);
-            if (roleEntity != null) {
-                roleEntities.add(roleEntity);
+        if (userDto.getRoles() != null) {
+            for (String role : userDto.getRoles()) {
+                RoleEntity roleEntity = roleRepository.findByName(role);
+                if (roleEntity != null) {
+                    roleEntities.add(roleEntity);
+                }
             }
-        }
-        userEntity.setRoles(roleEntities);
 
+            userEntity.setRoles(roleEntities);
+        }
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
         UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
