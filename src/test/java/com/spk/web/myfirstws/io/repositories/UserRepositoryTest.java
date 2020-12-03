@@ -3,6 +3,7 @@ package com.spk.web.myfirstws.io.repositories;
 import com.spk.web.myfirstws.io.entity.AddressEntity;
 import com.spk.web.myfirstws.io.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class UserRepositoryTest {
@@ -32,7 +34,7 @@ public class UserRepositoryTest {
     @BeforeEach
     void setUp() throws Exception {
 
-        if (!recordsCreated) createRecords();
+        //if (!recordsCreated) createRecords();
     }
 
     @Test
