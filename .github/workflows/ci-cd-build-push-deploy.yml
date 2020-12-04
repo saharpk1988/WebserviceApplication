@@ -20,9 +20,11 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - name: Set up Docker Buildx
         id: buildx
+        if: success()
         uses: docker/setup-buildx-action@v1
       - name: Build and push
         id: docker_build
+        if: success()
         uses: docker/build-push-action@v2
         with:
           context: ./
@@ -34,8 +36,10 @@ jobs:
         run: echo ${{ steps.docker_build.outputs.digest }}
   deploy:
     runs-on: ubuntu-latest
+    needs: [buildandpush]
     steps:
       - name: Deploy to AWS
+        if: success()
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: sudo docker stop web && sudo docker rm web && sudo docker pull saharpk1988/webservice:${{ github.sha }} && sudo docker run --restart=unless-stopped -p 8080:8080 --network="webserviceapplication_default" --name web -d saharpk1988/webservice:${{ github.sha }}
