@@ -31,7 +31,7 @@ jobs:
           context: ./
           file: ./web.Dockerfile
           push: true
-          tags: saharpk1988/webservice:$GITHUB_SHA
+          tags: saharpk1988/webservice:${{ github.github.sha }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
