@@ -2,7 +2,6 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: CI Build and Push to Docker Hub
-
 on:
   push:
     branches: [ master ]
@@ -34,6 +33,7 @@ jobs:
         run: echo ${{ steps.docker_build.outputs.digest }}
   deploy:
     runs-on: ubuntu-latest
+    needs: [ buildandpush ]
     steps:
       - name: Deploy to AWS
         uses: garygrossgarten/github-action-ssh@release
