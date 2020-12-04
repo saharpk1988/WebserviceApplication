@@ -12,7 +12,7 @@
     <artifactId>my-first-ws</artifactId>
     <version>1</version>
     <name>my-first-ws</name>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>11</java.version>

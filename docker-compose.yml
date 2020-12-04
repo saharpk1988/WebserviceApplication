@@ -1,0 +1,29 @@
+version: '3.5'
+services:
+  db:
+    image: mysql:8.0.22
+    container_name: db
+    ports:
+      - 3306:3306
+    volumes:
+      - $PWD/.docker:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=secretadmin
+      - MYSQL_USER=sahar
+      - MYSQL_PASSWORD=123pass
+    restart: on-failure
+
+  web:
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    image: jdk-web
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+
+volumes:
+  db-data:
+
