@@ -33,7 +33,7 @@ jobs:
           file: ./web.Dockerfile
           push: true
           repository: saharpk1988/webservice
-          tags: saharpk1988/webservice:latest
+          tags: saharpk1988/webservice:${{ github.sha }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
