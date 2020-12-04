@@ -41,6 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ buildandpush ]
     steps:
+      - name: Deploy to AWS
       - uses: garygrossgarten/github-action-ssh@release
       with:
         command: sudo docker stop web && sudo docker rm web && sudo docker pull saharpk1988/webservice:${{ github.sha }} && sudo docker run --restart=unless-stopped -p 8080:8080 --network="webserviceapplication_default" --name web -d saharpk1988/webservice:${{ github.sha }}
