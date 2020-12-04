@@ -2,9 +2,11 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: CI Build and Push to Docker Hub
+
 on:
   push:
     branches: [ master ]
+
 jobs:
   buildandpush:
     runs-on: ubuntu-latest
@@ -32,19 +34,16 @@ jobs:
           push: true
           repository: saharpk1988/webservice
           tags: saharpk1988/webservice:${{ github.sha }}
-
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-
-
   deploy:
     runs-on: ubuntu-latest
     needs: [ buildandpush ]
     steps:
       - name: Deploy to AWS
-      uses: garygrossgarten/github-action-ssh@release
-      with:
-        command: sudo docker stop web && sudo docker rm web && sudo docker pull saharpk1988/webservice:${{ github.sha }} && sudo docker run --restart=unless-stopped -p 8080:8080 --network="webserviceapplication_default" --name web -d saharpk1988/webservice:${{ github.sha }}
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        privateKey: ${{ secrets.PRIVATE_KEY }}
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: sudo docker stop web && sudo docker rm web && sudo docker pull saharpk1988/webservice:${{ github.sha }} && sudo docker run --restart=unless-stopped -p 8080:8080 --network="webserviceapplication_default" --name web -d saharpk1988/webservice:${{ github.sha }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          privateKey: ${{ secrets.PRIVATE_KEY }}
