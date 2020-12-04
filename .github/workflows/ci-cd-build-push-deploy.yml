@@ -39,7 +39,6 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [ buildandpush ]
     steps:
       - name: Deploy to AWS
       uses: garygrossgarten/github-action-ssh@release
